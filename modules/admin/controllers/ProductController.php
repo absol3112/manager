@@ -89,6 +89,63 @@ class ProductController extends Controller
             ]);
         }
     }
+    /**
+     * Updates an existing Product model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionPlus($id)
+    {
+        $searchModel = new ProductSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        $model = $this->findModel($id);
+        $model->number++;
+        $model->save();
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        } else {
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        }
+    }
+    /**
+     * Updates an existing Product model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionMinius($id)
+    {
+        $searchModel = new ProductSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        $model = $this->findModel($id);
+        if ($model->number!=0) {
+            $model->number--;
+        }else{
+            echo "<script>alert('không thể thực hiện vì số lượng đã bằng 0');</script>";
+        }
+        
+        $model->save();
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        } else {
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        }
+    }
 
     /**
      * Deletes an existing Product model.
