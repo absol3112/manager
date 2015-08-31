@@ -43,10 +43,15 @@ $config = [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            //'suffix'=>'.lw',
-            //'enableStrictParsing' => true,
-            'rules' => [
-            ],
+            // 'suffix'=>'.lw',
+            // 'enableStrictParsing' => true,
+            'rules' =>[
+                'product/plus'=>'admin/product/plus',
+                'product/view'=>'admin/product/view',
+                'product/minus'=>'admin/product/minius',
+                // '/<id:\d+>'
+
+            ]
         ],
         'db' => require(__DIR__ . '/db.php'),
     ],

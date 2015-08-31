@@ -5,9 +5,11 @@ namespace app\modules\admin\controllers;
 use Yii;
 use app\modules\admin\models\Product;
 use app\modules\admin\models\ProductSearch;
+use app\modules\admin\models\Log;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 
 /**
  * ProductController implements the CRUD actions for Product model.
@@ -34,11 +36,12 @@ class ProductController extends Controller
     {
         $searchModel = new ProductSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+
     }
 
     /**
@@ -48,6 +51,7 @@ class ProductController extends Controller
      */
     public function actionView($id)
     {
+        echo Url::toRoute(['admin/product/view', 'id' => $id]);
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -61,7 +65,6 @@ class ProductController extends Controller
     public function actionCreate()
     {
         $model = new Product();
-
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->product_id]);
         } else {
@@ -97,17 +100,21 @@ class ProductController extends Controller
      */
     public function actionPlus($id)
     {
+        // echo Url::toRoute(['admin/product/plus', 'id' => $id]);
         $searchModel = new ProductSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $LogModel = new log;
+        $LogModel->product_id = $id;
+        $LogModel->number = 1;  
         $model = $this->findModel($id);
+        $LogModel->content = "đã thêm sản phẩm ".$model->name." với số lượng là "; 
         $model->number++;
+        $LogModel->save();
         $model->save();
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->render('index', [
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
-            ]);
+
+            return $this->redirect('admin/product/index');
         } else {
             return $this->render('index', [
                 'searchModel' => $searchModel,
@@ -123,10 +130,15 @@ class ProductController extends Controller
      */
     public function actionMinius($id)
     {
+        // echo Url::toRoute(['admin/product/minius', 'id' => $id]);
         $searchModel = new ProductSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $LogModel = new log;
+        $LogModel->product_id = $id;
+        $LogModel->number = -1;  
         $model = $this->findModel($id);
+        $LogModel->content = "đã bán sản phẩm ".$model->name." với số lượng là "; 
+        $LogModel->save();
         if ($model->number!=0) {
             $model->number--;
         }else{
